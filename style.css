@@ -1,44 +1,68 @@
-/* Reset & Global Styles */
+/* Reset & Global */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body, html {
+html, body {
   height: 100%;
   font-family: 'Poppins', sans-serif;
   color: #fff;
   scroll-behavior: smooth;
   overflow-x: hidden;
-}
-#header {
-
-    background-color: #00FF9F;
-    height: 60px;
-   
-
-}
-a {text-decoration: none;
-    color: #283f52;
-    margin-right : 125px;
-    margin-left: 125px;
-    font-size: 20px;
-}
-#link {
-    color: #3d84e8;
-    font-size: 37px;
-    margin-right: 200px;
-    margin-left: 20px;
-    padding-top: 10px;
+  font-size: 18px;
+  background: #0f0f0f;
 }
 
+/* Background Animation */
 #particles-js {
   position: fixed;
   width: 100%;
   height: 100%;
   z-index: -1;
   background: #0f0f0f;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #00FF9F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 20px;
+  gap: 10px;
+}
+
+.logo {
+  font-size: 32px;
+  color: #3d84e8;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin:auto
+}
+
+
+.logo {
+  color: #3d84e8;
+  font-size: 32px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav-links a {
+  font-size: 18px;
+  color: #283f52;
+  text-decoration: none;
+  padding: 8px 10px;
+  text-align: center;
+  margin :0 50px 0 50px; 
 }
 
 /* Hero Section */
@@ -79,117 +103,129 @@ a {text-decoration: none;
   background: #00c3cc;
 }
 
-/* About Section */
-.about {
-  padding: 30px 20px;
-  background-color: rgba(18, 21, 30, 0.4);
+/* About + Contact Sections */
+.about, .contact {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 80px 20px;
+  backdrop-filter: blur(5px);
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+  max-width: 900px;
+  margin: 50px auto;
   text-align: center;
-  height: 400px;
 }
 
-.about h2 {
+.about h2, .contact h2 {
   font-size: 2.5rem;
   margin-bottom: 20px;
 }
 
-.about p {
+.about p, .contact p {
   font-size: 1.2rem;
   max-width: 700px;
   margin: 0 auto;
   line-height: 1.8;
 }
- .hover-link {
-      position: relative;
-      color: black;
-      text-decoration: none;
-      padding-bottom: 3px;
-      display: inline-block;
-      transition: transform 0.3s ease;
-    }
 
-    .hover-link::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      height: 2px;
-      background-color: black;
-      transition: width 0.3s ease;
-    }
-
-    .hover-link:hover {
-      transform: scale(1.5);
-    }
-
-    .hover-link:hover::after {
-      width: 100%;
-    }
-    
-    .hover-link-mad {
-      position: relative;
-      color: black;
-      text-decoration: none;
-      padding-bottom: 3px;
-      display: inline-block;
-      transition: transform 0.3s ease;
-    }
-
-    .hover-link-mad::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      height: 2px;
-      background-color: black;
-      transition: width 0.3s ease;
-    }
-
-    .hover-link-mad:hover {
-      transform: scale(1.1);
-    }
-
-    .hover-link-mad:hover::after {
-      width: 100%;
-    }
-    .hover-link-mail {
-      position: relative;
-      color: rgb(81, 137, 215);
-      text-decoration: underline;
-      padding-bottom: 3px;
-      display: inline-block;
-      transition: transform 0.3s ease;
-    }
-
-    
-    .hover-link-mail:hover {
-      transform: scale(1.1);
-    }
-
-    .hover-link-mail:hover::after {
-      width: 100%;
-    }
-    .contact {
-      padding: 80px 20px;
-      background-color: rgba(40, 49, 61, 0.6);
-      text-align: center;
-    }
-    .about, .contact {
-  background: rgba(0, 0, 0, 0.6); /* Slightly see-through black */
-  padding: 80px 20px;
-  backdrop-filter: blur(5px); /* Soft frosted-glass effect */
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1); /* subtle cyan glow */
-  max-width: 900px;
-  margin: 50px auto;
-  text-align: center;
+/* Hover Effects */
+.hover-link, .hover-link-mad {
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.3s ease;
 }
-.contact h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+
+.hover-link::after,
+.hover-link-mad::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: black;
+  transition: width 0.3s ease;
 }
-.contact p {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+
+.hover-link:hover {
+  transform: scale(1.1);
+}
+
+.hover-link:hover::after {
+  width: 100%;
+}
+
+.hover-link-mad:hover {
+  transform: scale(1.05);
+}
+
+.hover-link-mad:hover::after {
+  width: 100%;
+}
+
+.hover-link-mail {
+  color: rgb(81, 137, 215);
+  text-decoration: underline;
+  transition: transform 0.3s ease;
+}
+
+.hover-link-mail:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .hero .content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero .content p {
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .hero .content h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero .content p {
+    font-size: 1rem;
+  }
+}
+@media screen and (min-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .nav-links {
+    gap: 50px;
+  }
 }
