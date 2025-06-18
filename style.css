@@ -220,12 +220,12 @@ html, body {
     gap: 50px;
   }
 }
- footer {
-   background-color: rgba(0, 255, 159, 0.1);
-  color: #4c6c87;
+footer {
+  background-color: rgba(30, 105, 70, 0.8);
+  color: #96c6ed;
   text-align: center;
   padding: 20px;
   position: relative;
   bottom: 0;
   width: 100%;
- }
+}
