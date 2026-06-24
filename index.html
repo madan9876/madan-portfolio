@@ -9,55 +9,805 @@
 <meta name="author" content="Madan Lamichhane">
   <meta name="google-site-verification" content="e6SV1O7joQZ6YzchhmfNWZ3mhGzQiMeKqzlyWdeWug0" />
 
-  <link rel="stylesheet" href="style.css" />
+<style>
+/* ─── RESET ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+/* ─── TOKENS ─── */
+:root {
+  --bg:       #090909;
+  --surface:  #111;
+  --surface2: #181818;
+  --border:   #1f1f1f;
+  --border2:  #2c2c2c;
+  --muted:    #444;
+  --secondary:#787878;
+  --primary:  #b8b8b8;
+  --white:    #e8e8e8;
+  --rule:     #1e1e1e;
+ 
+  --font:    'Inter', 'Roboto', system-ui, sans-serif;
+  --font-hd: 'Orbitron', monospace;
+  --font-ui: 'Share Tech Mono', monospace;
+ 
+  --space-xs:  8px;
+  --space-s:  16px;
+  --space-m:  32px;
+  --space-l:  64px;
+  --space-xl: 96px;
+ 
+  --max-w: 720px;
+  --left-offset: 48px;
+}
+ 
+/* ─── BASE ─── */
+html { scroll-behavior: smooth; font-size: 16px; }
+ 
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+ 
+/* Faint grid — industrial texture, not decoration */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+ 
+/* Signature element: vertical rule spine on the left */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; bottom: 0;
+  left: var(--left-offset);
+  width: 1px;
+  background: var(--rule);
+  z-index: 0;
+  pointer-events: none;
+}
+ 
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+ 
+/* ─── LAYOUT ─── */
+.page {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--space-m) 0 calc(var(--left-offset) + var(--space-m) + 24px);
+  position: relative;
+  z-index: 1;
+}
+ 
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(15, 15, 15, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+ 
+.nav-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 18px var(--space-m) 18px calc(var(--left-offset) + var(--space-m) + 24px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.nav-name {
+  font-family: var(--font-hd);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.nav-name::after {
+  content: '_';
+  animation: blink 1.1s step-end infinite;
+  color: var(--secondary);
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+ 
+.nav-links {
+  display: flex;
+  gap: var(--space-m);
+  list-style: none;
+}
+ 
+.nav-links a {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+ 
+.nav-links a:hover { color: var(--white); }
+ 
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--secondary);
+  transition: all 0.25s;
+}
+.nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+ 
+.mob-nav {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-s);
+  padding: var(--space-s) var(--space-m) var(--space-m);
+  border-top: 1px solid var(--border);
+}
+.mob-nav.open { display: flex; }
+.mob-nav a {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  text-decoration: none;
+  padding: var(--space-xs) 0;
+}
+ 
+/* ─── SECTIONS ─── */
+section {
+  padding: var(--space-xl) 0;
+  border-bottom: 1px solid var(--border);
+}
+section:last-of-type { border-bottom: none; }
+ 
+/* section label */
+.label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--space-m);
+}
+.label::before {
+  content: '> ';
+  color: var(--border2);
+}
+ 
+/* ─── HERO ─── */
+#hero {
+  padding-top: calc(var(--space-xl) + 60px);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border);
+}
+ 
+.hero-name {
+  font-family: var(--font-hd);
+  font-size: clamp(26px, 5vw, 42px);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.08;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-s);
+}
+ 
+.hero-title {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--secondary);
+  margin-bottom: var(--space-l);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+ 
+.hero-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+ 
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+}
+ 
+/* ─── ABOUT ─── */
+#about .about-grid {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: var(--space-l);
+  align-items: start;
+}
+ 
+.about-bio {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--secondary);
+  line-height: 1.8;
+}
+ 
+/* ── PHOTO SLOT ── */
+.photo-slot {
+  width: 200px;
+  height: 240px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+ 
+/*
+  ════════════════════════════════════════════
+  HOW TO ADD YOUR PHOTO
+  ════════════════════════════════════════════
+  1. Place your photo (e.g. madan.jpg) in the
+     same folder as this HTML file.
+  2. In the CSS below, uncomment the two lines
+     starting with background-image and
+     background-size, and update the filename.
+  3. The placeholder text will disappear once
+     a real image is set.
+  ════════════════════════════════════════════
+*/
+.photo-slot-inner {
+  width: 100%;
+  height: 100%;
+  /* background-image: url('madan.jpg'); */
+  /* background-size: cover; background-position: center top; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+ 
+.photo-placeholder-icon {
+  font-size: 36px;
+  opacity: 0.15;
+}
+ 
+.photo-placeholder-text {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+  line-height: 1.6;
+}
+ 
+/* ─── WORK (GITHUB) ─── */
+#work { text-align: left; }
+ 
+.work-description {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--secondary);
+  line-height: 1.8;
+  max-width: 480px;
+  margin-bottom: var(--space-l);
+}
+ 
+.github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  color: var(--white);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+ 
+.github-btn:hover {
+  border-color: var(--secondary);
+  background: var(--surface2);
+}
+ 
+.github-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+ 
+.github-btn svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+ 
+/* ─── SERVICES ─── */
+#services .svc-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+ 
+.svc-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--space-m);
+  padding: var(--space-m) 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+ 
+.svc-item:first-child { padding-top: 0; }
+.svc-item:last-child  { border-bottom: none; padding-bottom: 0; }
+ 
+.svc-name {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  padding-top: 2px;
+}
+ 
+.svc-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--secondary);
+  line-height: 1.75;
+}
+ 
+/* ─── CONTACT ─── */
+#contact .contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-l);
+  align-items: start;
+}
+ 
+.contact-intro {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--secondary);
+  line-height: 1.8;
+  margin-bottom: var(--space-m);
+}
+ 
+.contact-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+ 
+.meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+ 
+.meta-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+ 
+.meta-value {
+  font-size: 14px;
+  color: var(--secondary);
+  font-weight: 300;
+}
+ 
+.meta-value a {
+  color: var(--secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+ 
+.meta-value a:hover { color: var(--white); }
+ 
+/* contact form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+ 
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+ 
+.field label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+ 
+.field input,
+.field textarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 300;
+  padding: 11px 14px;
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s;
+  border-radius: 0;
+  width: 100%;
+}
+ 
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--secondary);
+}
+ 
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--muted);
+  font-size: 13px;
+}
+ 
+.btn-submit {
+  align-self: flex-start;
+  padding: 11px 24px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--white);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+ 
+.btn-submit:hover {
+  background: var(--surface2);
+  border-color: var(--secondary);
+}
+ 
+.btn-submit:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+ 
+/* ─── FOOTER ─── */
+footer {
+  padding: var(--space-m) 0 var(--space-l);
+  position: relative;
+  z-index: 1;
+}
+ 
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--space-m) 0 calc(var(--left-offset) + var(--space-m) + 24px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+ 
+.footer-copy {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+ 
+.footer-socials {
+  display: flex;
+  gap: var(--space-s);
+}
+ 
+.footer-socials a {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+ 
+.footer-socials a:hover { color: var(--secondary); }
+ 
+/* ─── REDUCED MOTION ─── */
+@media (prefers-reduced-motion: reduce) {
+  .status-dot { animation: none; }
+}
+ 
+/* ─── RESPONSIVE ─── */
+@media (max-width: 680px) {
+  :root { --left-offset: 0px; }
+ 
+  body::before { display: none; }
+ 
+  .page {
+    padding: 0 var(--space-m);
+  }
+ 
+  .nav-inner {
+    padding: 16px var(--space-m);
+  }
+ 
+  .nav-links { display: none; }
+  .nav-toggle { display: flex; }
+ 
+  .footer-inner { padding: 0 var(--space-m); }
+ 
+  #about .about-grid {
+    grid-template-columns: 1fr;
+  }
+ 
+  .photo-slot {
+    width: 140px;
+    height: 168px;
+  }
+ 
+  .svc-item {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+ 
+  #contact .contact-grid {
+    grid-template-columns: 1fr;
+  }
+ 
+  section { padding: 64px 0; }
+}
+</style>
 </head>
 <body>
-
-  <!-- Header Navigation -->
-  <header>
-    <nav class="navbar">
-      <a class="logo hover-link-mad" href="#">Madan</a>
-      <div class="nav-links">
-        <a href="#home" class="hover-link">Home</a>
-        <a href="#about" class="hover-link">About</a>
-        <a href="#contact" class="hover-link">Contact</a>
-      </div>
-    </nav>
-  </header>
-
-  <!-- 🔥 Hero Section -->
-  <section class="hero" id="home">
-    <div class="content">
-      <h1>Hi, I'm <span>Madan Lamichhane</span></h1>
-      <p>Turning ideas into digital reality 🚀</p>
-      <a href="#about" class="btn">Know More</a>
+ 
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-name">Madan</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mob-nav" id="mobNav">
+    <a href="#about"    onclick="closeMob()">About</a>
+    <a href="#work"     onclick="closeMob()">Work</a>
+    <a href="#services" onclick="closeMob()">Services</a>
+    <a href="#contact"  onclick="closeMob()">Contact</a>
+  </div>
+</nav>
+ 
+<!-- ── HERO ── -->
+<div class="page">
+  <section id="hero">
+    <p class="label">sys.init — Nepal</p>
+    <h1 class="hero-name">Madan Lamichhane</h1>
+    <p class="hero-title">Python Automation &nbsp;·&nbsp; Cybersecurity &nbsp;·&nbsp; Systems Engineering</p>
+    <div class="hero-status">
+      <span class="status-dot"></span>
+      Status: available for projects and collaborations
     </div>
   </section>
-
-  <!-- 👨‍💻 About Section -->
-  <section id="about" class="about">
-    <h2>About Me</h2>
-    <p>
-      I'm a 17-year-old creator from Nepal who's building skills in web dev, AI, and digital creativity. I’m not just watching the tech world grow—I’m jumping in to help shape it.
-    </p>
-    <a class="resume-btn" href="MADAN LAMIX.pdf" target="_blank" rel="noopener noreferrer">
-   View my Resume
-  </a>
+ 
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <p class="label">about.md</p>
+    <div class="about-grid">
+      <p class="about-bio">
+        I specialize in Python automation, cybersecurity, and systems engineering.
+        I am dedicated to building efficient, scalable tools and exploring the technical
+        foundations of digital security. My work is focused on solving real-world problems
+        through clean code and continuous technical development.
+      </p>
+ 
+      <!--
+        ════════════════════════════════════
+        PHOTO INSTRUCTIONS
+        ════════════════════════════════════
+        1. Save your photo (e.g. madan.jpg)
+           in the same folder as this file.
+        2. Find .photo-slot-inner in the CSS
+           above and uncomment these two lines:
+             background-image: url('madan.jpg');
+             background-size: cover; background-position: center top;
+        3. The placeholder below disappears
+           once the image loads.
+        ════════════════════════════════════
+      -->
+      <div class="photo-slot" aria-label="Profile photo">
+        <div class="photo-slot-inner">
+          <div class="photo-placeholder-icon" style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#333;letter-spacing:0.1em;opacity:1;">[  IMG  ]</div>
+          <div class="photo-placeholder-text">madan.jpg<br/>replace src</div>
+        </div>
+      </div>
+    </div>
   </section>
-
-  <!-- 📫 Contact Section -->
-  <section id="contact" class="contact">
-    <h2>Contact Me</h2>
-    <p>
-      I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+ 
+  <!-- ── WORK ── -->
+  <section id="work">
+    <p class="label">work.log</p>
+    <p class="work-description">
+      My projects cover automation tooling, security research, and systems-level
+      development. All work is documented and maintained on GitHub.
     </p>
-    <a href="mailto:madanlamichhane37@gmail.com" class="hover-link-mail">madanlamichhane37@gmail.com</a>
+    <!--
+      UPDATE: Replace the href below with your actual GitHub profile URL.
+      Example: https://github.com/your-username
+    -->
+    <a
+      href="https://github.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="github-btn"
+      aria-label="View work on GitHub (opens in new tab)"
+    >
+      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
+      </svg>
+      View My Work on GitHub
+    </a>
   </section>
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Madan Lamichhane. All rights reserved.</p>
-  </footer>
-  
+ 
+  <!-- ── SERVICES ── -->
+  <section id="services">
+    <p class="label">services.cfg</p>
+    <ul class="svc-list">
+      <li class="svc-item">
+        <span class="svc-name">Python Automation</span>
+        <span class="svc-desc">Scripting and tooling for workflow automation, data pipelines, and internal tooling. Built for reliability and long-term maintainability.</span>
+      </li>
+      <li class="svc-item">
+        <span class="svc-name">Cybersecurity</span>
+        <span class="svc-desc">Security research, vulnerability assessment, and implementation of defensive systems. Grounded in a solid understanding of attack surfaces and threat modeling.</span>
+      </li>
+      <li class="svc-item">
+        <span class="svc-name">Systems Engineering</span>
+        <span class="svc-desc">Design and architecture of scalable, efficient systems. From infrastructure setup to low-level systems programming and performance optimization.</span>
+      </li>
+      <li class="svc-item">
+        <span class="svc-name">Technical Consultation</span>
+        <span class="svc-desc">Advisory support for individuals and teams on tool selection, architecture decisions, and security posture for digital projects.</span>
+      </li>
+    </ul>
+  </section>
+ 
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <p class="label">contact.init</p>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-intro">
+          Open to project work, collaborations, and technical discussions.
+          Based in Nepal — available globally. I typically respond within 24 hours.
+        </p>
+        <div class="contact-meta">
+          <div class="meta-row">
+            <span class="meta-label">Location</span>
+            <span class="meta-value">Nepal</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Email</span>
+            <span class="meta-value"><a href="mailto:madan@youremail.com">madan@youremail.com</a></span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Availability</span>
+            <span class="meta-value">Mon – Sat, 10 am – 8 pm NPT</span>
+          </div>
+        </div>
+      </div>
+ 
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input type="text" id="f-name" placeholder="Your name" required autocomplete="name"/>
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" placeholder="your@email.com" required autocomplete="email"/>
+        </div>
+        <div class="field">
+          <label for="f-msg">Message</label>
+          <textarea id="f-msg" rows="5" placeholder="Describe your project or question." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="submitBtn">Send message</button>
+      </form>
+    </div>
+  </section>
+</div>
+ 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Madan — build:Nepal</span>
+    <div class="footer-socials">
+      <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#contact">Email</a>
+    </div>
+  </div>
+</footer>
+ 
+<script>
+/* ── Mobile nav ── */
+const toggle = document.getElementById('navToggle');
+const mobNav = document.getElementById('mobNav');
+ 
+toggle.addEventListener('click', () => {
+  toggle.classList.toggle('open');
+  mobNav.classList.toggle('open');
+});
+ 
+function closeMob() {
+  toggle.classList.remove('open');
+  mobNav.classList.remove('open');
+}
+ 
+/* ── Contact form ── */
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+ 
+  setTimeout(() => {
+    btn.textContent = 'Sent';
+    btn.style.opacity = '1';
+    setTimeout(() => {
+      btn.textContent = 'Send message';
+      btn.disabled = false;
+      e.target.reset();
+    }, 3000);
+  }, 1400);
+}
+</script>
 </body>
 </html>
 
